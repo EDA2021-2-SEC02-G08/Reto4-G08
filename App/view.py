@@ -34,6 +34,7 @@ se hace la solicitud al controlador para ejecutar la
 operación solicitada
 """
 
+
 def printMenu():
     print("Bienvenido")
     print("1- Cargar información en el catálogo")
@@ -44,7 +45,9 @@ def printMenu():
     print("6- Obtener afectación por aeropuerto cerrado")
     print("0- Salir")
 
+
 catalog = None
+
 
 """
 Menu principal
