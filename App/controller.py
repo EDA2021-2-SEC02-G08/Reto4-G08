@@ -66,7 +66,8 @@ def loadRoutes(analyzer, routes_file):
                                 delimiter=",")
 
     for route in input_file:
-        pass
+        model.addConnection(analyzer, route['Departure'], route['Destination'],
+                            route['distance_km'])
 
 
 def loadCities(analyzer, cities_file):
