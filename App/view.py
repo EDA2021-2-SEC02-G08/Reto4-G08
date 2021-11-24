@@ -24,7 +24,6 @@
 import config as cf
 import sys
 import controller
-from DISClib.ADT import list as lt
 assert cf
 
 
@@ -38,16 +37,22 @@ operación solicitada
 
 def printMenu():
     print("Bienvenido")
-    print("1- Cargar información en el catálogo")
-    print("2- Obtener aeropuertos de interconexión")
-    print("3- Obtener clústeres y conexión entre aeropuertos")
-    print("4- Obtener ruta de mínima distancia entre origen y destino")
-    print("5- Obtener viaje con millas de viajero")
-    print("6- Obtener afectación por aeropuerto cerrado")
+    print("1- Inicializar Analizador")
+    print("2- Cargar información en el catálogo")
+    print("3- Obtener aeropuertos de interconexión")
+    print("4- Obtener clústeres y conexión entre aeropuertos")
+    print("5- Obtener ruta de mínima distancia entre origen y destino")
+    print("6- Obtener viaje con millas de viajero")
+    print("7- Obtener afectación por aeropuerto cerrado")
     print("0- Salir")
 
 
 catalog = None
+
+
+airports_file = 'airports_full.csv'
+routes_file = 'routes_full.csv'
+cities_file = 'worldcities.csv'
 
 
 """
@@ -55,23 +60,27 @@ Menu principal
 """
 while True:
     printMenu()
-    inputs = input('Seleccione una opción para continuar\n')
-    if int(inputs[0]) == 1:
-        print("Cargando información de los archivos ....")
+    inputs = int(input('Seleccione una opción para continuar\n'))
+    if inputs == 1:
+        print("\nInicializando....")
+        cont = controller.init()
 
-    elif int(inputs[0]) == 2:
+    elif inputs == 2:
         pass
 
-    elif int(inputs[0]) == 3:
+    elif inputs == 3:
         pass
 
-    elif int(inputs[0]) == 4:
+    elif inputs == 4:
         pass
 
-    elif int(inputs[0]) == 5:
+    elif inputs == 5:
         pass
 
-    elif int(inputs[0]) == 6:
+    elif inputs == 6:
+        pass
+
+    elif inputs == 7:
         pass
 
     else:
