@@ -57,11 +57,11 @@ def newAnalyzer():
                                           size=10000,
                                           comparefunction=compareIATA)
 
-    analyzer['cities'] = mp.newMap(numelements=41000, 
+    analyzer['cities'] = mp.newMap(numelements=41000,
                                    maptype='PROBING')
 
-    analyzer['IATAcodes'] = mp.newMap(numelements=10000, 
-                                   maptype='PROBING')
+    analyzer['IATAcodes'] = mp.newMap(numelements=10000,
+                                      maptype='PROBING')
 
     return analyzer
 
@@ -111,7 +111,7 @@ def addConnection(analyzer, origin, destination, distance):
         addConnectionToGraph(ND, origin, destination, distance)
 
 
-def addCity (analyzer, city):
+def addCity(analyzer, city):
     cities = analyzer['cities']
     cityName = city['city_ascii'].lower()
     mp.put(cities, cityName, city)
