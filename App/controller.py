@@ -56,7 +56,7 @@ def loadAirports(analyzer, airports_file):
                                 delimiter=",")
 
     for airport in input_file:
-        model.addAirport(analyzer['directed_Graph'], airport['IATA'])
+        model.addAirport(analyzer, airport)
 
 
 def loadRoutes(analyzer, routes_file):
@@ -78,7 +78,34 @@ def loadCities(analyzer, cities_file):
                                 delimiter=",")
 
     for city in input_file:
-        pass
+        model.addCity(analyzer, city)
 
 
 # Funciones de consulta sobre el catálogo
+
+def totalAirports(analyzer):
+    return model.totalAirports(analyzer)
+
+
+def totalRoutes(analyzer):
+    return model.totalRoutes(analyzer)
+
+
+def totalAirportsBackAndForth(analyzer):
+    return model.totalAirportsBackAndForth(analyzer)
+
+
+def totalBackAndForthRoutes(analyzer):
+    return model.totalBackAndForthRoutes(analyzer)
+
+
+def totalCities(analyzer):
+    return model.totalCities(analyzer)
+
+
+def getFirstLoadedAirport(analyzer):
+    return model.getFirstLoadedAirport(analyzer)
+
+
+def getLastLoadedCity(analyzer):
+    return model.getLastLoadedCity(analyzer)
