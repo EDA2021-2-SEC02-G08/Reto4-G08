@@ -26,10 +26,9 @@
 
 
 import config as cf
-# from DISClib.ADT import map as mp
+from DISClib.ADT import map as mp
 # from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
-from DISClib.Utils import error as error
 assert cf
 
 
@@ -41,7 +40,8 @@ def newAnalyzer():
     Insertar mensaje
     """
     analyzer = {'directed_Graph': None,
-                'undirected_Graph': None}
+                'undirected_Graph': None,
+                'airports': None}
 
     analyzer['directed_Graph'] = gr.newGraph(datastructure='ADJ_LIST',
                                              directed=True,
@@ -53,31 +53,31 @@ def newAnalyzer():
                                                size=14000,
                                                comparefunction=compareIATA)
 
+    analyzer['airports'] = mp.newMap(numelements=14000,
+                                     maptype='PROBING',
+                                     comparefunction=compareIATA)
+
     return analyzer
 
 
 # Funciones para agregar informacion al catalogo
 
 
-def directedGraph(analyzer, airport):
-    origin = airport['IATA']
-    addAirport(analyzer['directed_Graph'], origin)
-
-
-def undirectedGraph(analyzer, airport):
-    origin = airport['IATA']
-    addAirport(analyzer['undirected_Graph'], origin)
-
-
 def addAirport(analyzer, origin):
     """
     Esta función adiciona un aeropuerto como un vértice del grafo
     """
-    try:
-        if not gr.containsVertex(analyzer, origin):
-            gr.insertVertex(analyzer, origin)
-    except Exception as exp:
-        error.reraise(exp, 'model:addAirport')
+    if not gr.containsVertex(analyzer, origin):
+        gr.insertVertex(analyzer, origin)
+
+
+def addConnection(analyzer, origin, destination, distance):
+    """
+    Esta función adiciona un arco entre dos aeropuertos
+    """
+    edge = gr.getEdge(analyzer, origin, destination)
+    if edge is None:
+        gr.addEdge(analyzer, origin, destination, distance)
 
 
 # Funciones para creacion de datos
@@ -91,8 +91,7 @@ def compareIATA(code, airport):
     """
     Compara dos aeropuertos
     """
-    code_IATA = airport['IATA']
-    if code == code_IATA:
+    if code == airport['key']:
         return 0
     else:
         return -1

@@ -65,6 +65,7 @@ while True:
         print("\nInicializando....")
         analyzer = controller.init()
         controller.loadAirports(analyzer, airports_file)
+        controller.loadRoutes(analyzer, routes_file)
 
     elif inputs == 2:
         pass
