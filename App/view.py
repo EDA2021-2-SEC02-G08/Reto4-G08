@@ -56,6 +56,23 @@ cities_file = 'worldcities.csv'
 
 
 """
+Funciones de impresión
+"""
+
+def printAirportData(airport):
+    print('Nombre: {} Ciudad: {} País: {} Latitud: {} Longitud: {}'.format(
+        airport['Name'], airport['City'], airport['Country'], 
+        airport['Latitude'], airport['Longitude']
+    ))
+
+
+def printCityData(city):
+    print('Nombre: {} Población: {} Latitud: {} Longitud: {}'.format(
+        city['city_ascii'], city['population'], city['lat'], 
+        city['lng']
+    ))
+
+"""
 Menu principal
 """
 while True:
@@ -63,10 +80,28 @@ while True:
     inputs = int(input('Seleccione una opción para continuar\n'))
     if inputs == 1:
         print("\nInicializando....")
-        cont = controller.init()
+        analyzer = controller.init()
 
     elif inputs == 2:
-        pass
+        controller.loadData(analyzer, airports_file, routes_file, cities_file)
+        NAirportsD = controller.totalAirports(analyzer)
+        NAirportsN = controller.totalAirportsBackAndForth(analyzer)
+        NRoutesD = controller.totalRoutes(analyzer)
+        NRoutesN = controller.totalBackAndForthRoutes(analyzer)
+        NCities = controller.totalCities(analyzer)
+        firstD, firstND = controller.getFirstLoadedAirport(analyzer)
+        last = controller.getLastLoadedCity(analyzer)
+        print('Total de aeropuertos: '+ str(NAirportsD))
+        print('Total de aeropuertos ida y vuelta: '+ str(NAirportsN))
+        print('Total de rutas: '+ str(NRoutesD))
+        print('Total de rutas ida y vuelta: '+ str(NRoutesN))
+        print('Total de ciudades: '+ str(NCities))
+        print('Primer aeropuerto cargado en el grafo dirigido:')
+        printAirportData(firstD)
+        print('Primer aeropuerto cargado en el grafo no dirigido:')
+        printAirportData(firstND)
+        print('Última ciudad cargada:')
+        printCityData(last)
 
     elif inputs == 3:
         pass

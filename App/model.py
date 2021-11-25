@@ -26,8 +26,9 @@
 
 
 import config as cf
-# from DISClib.ADT import map as mp
-# from DISClib.DataStructures import mapentry as me
+from DISClib.ADT import list as lt
+from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
 assert cf
 
@@ -37,67 +38,147 @@ assert cf
 
 def newAnalyzer():
     """
-    Insertar mensaje
+    Crea la estructura de datos para modelar el problema.
     """
     analyzer = {'directed': None,
                 'no_directed': None,
+                'cities': None,
+                'IATAcodes': None,
                 'components': None,
                 'paths': None}
 
     analyzer['directed'] = gr.newGraph(datastructure='ADJ_LIST',
                                        directed=True,
-                                       size=14000,
+                                       size=10000,
                                        comparefunction=compareIATA)
 
     analyzer['no_directed'] = gr.newGraph(datastructure='ADJ_LIST',
                                           directed=False,
-                                          size=14000,
+                                          size=10000,
                                           comparefunction=compareIATA)
+
+    analyzer['cities'] = mp.newMap(numelements=41000, 
+                                   maptype='PROBING')
+
+    analyzer['IATAcodes'] = mp.newMap(numelements=10000, 
+                                   maptype='PROBING')
 
     return analyzer
 
 
-def graphDirected(analyzer, airport):
-    origin = airport['IATA']
-    addAirport(analyzer['directed'], origin)
+# Funciones para agregar informacion al catalogo
+
+def addAirport(analyzer, airport):
+    """
+    Agrega el vértice que representa un aeropuerto al grafo dirigido y agrega
+    al mapa de códigos IATA la información del aeropuerto.
+    """
+    vertex = airport['IATA']
+    addAirportToGraph(analyzer['directed'], vertex)
+    mp.put(analyzer['IATAcodes'], vertex, airport)
 
 
-def graphNoDirected(analyzer, airport):
-    origin = airport['IATA']
-    addAirport(analyzer['no_directed'], origin)
-
-
-def addAirport(analyzer, origin):
+def addAirportToGraph(graph, airport):
     """
     Adiciona un aeropuerto, por su código IATA, como un vertice del grafo
     """
-    if not gr.containsVertex(analyzer, origin):
-        gr.insertVertex(analyzer, origin)
+    if not gr.containsVertex(graph, airport):
+        gr.insertVertex(graph, airport)
 
-    return analyzer
+
+def addConnectionToGraph(graph, origin, destination, distance):
+    """
+    Adiciona un arco entre dos aeropuertos a un grafo.
+    """
+    edge = gr.getEdge(graph, origin, destination)
+    if edge is None:
+        gr.addEdge(graph, origin, destination, distance)
 
 
 def addConnection(analyzer, origin, destination, distance):
     """
-    Adiciona un arco entre dos aeropuertos
+    Adiciona las rutas a los grafos dirigido y no dirigido.
     """
-    edge = gr.getEdge(analyzer['connections'], origin, destination)
-    if edge is None:
-        gr.addEdge(analyzer['connections'], origin, destination, distance)
+    directed = analyzer['directed']
+    addConnectionToGraph(directed, origin, destination, distance)
+    come = gr.getEdge(directed, origin, destination)
+    go = gr.getEdge(directed, destination, origin)
+    comeNgo = (come is not None) and (go is not None)
+    if comeNgo:
+        ND = analyzer['no_directed']
+        addAirportToGraph(ND, origin)
+        addAirportToGraph(ND, destination)
+        addConnectionToGraph(ND, origin, destination, distance)
 
-    return analyzer
 
-# Funciones para agregar informacion al catalogo
+def addCity (analyzer, city):
+    cities = analyzer['cities']
+    cityName = city['city_ascii'].lower()
+    mp.put(cities, cityName, city)
 
-# Funciones para creacion de datos
 
 # Funciones de consulta
+
+def totalAirports(analyzer):
+    """
+    Retorna el total de aeropuertos
+    """
+    return gr.numVertices(analyzer['directed'])
+
+
+def totalRoutes(analyzer):
+    """
+    Retorna el total de rutas
+    """
+    return gr.numEdges(analyzer['directed'])
+
+
+def totalAirportsBackAndForth(analyzer):
+    """
+    Retorna el total de aeropuertos con al menos una ida y vuelta
+    """
+    return gr.numVertices(analyzer['no_directed'])
+
+
+def totalBackAndForthRoutes(analyzer):
+    """
+    Retorna el total de rutas de ida y vuelta
+    """
+    return gr.numEdges(analyzer['no_directed'])
+
+
+def totalCities(analyzer):
+    """
+    Retorna el total de ciudades cargadas.
+    """
+    return mp.size(analyzer['cities'])
+
+
+def getFirstLoadedAirports(analyzer):
+    airports = analyzer['IATAcodes']
+    directed = analyzer['directed']
+    N_directed = analyzer['no_directed']
+    firstDirected = lt.firstElement(gr.vertices(directed))
+    firstNDirected = lt.firstElement(gr.vertices(N_directed))
+    pair1 = mp.get(airports, firstDirected)
+    pair2 = mp.get(airports, firstNDirected)
+    return me.getValue(pair1), me.getValue(pair2)
+
+
+def getLastLoadedCity(analyzer):
+    cities = analyzer['cities']
+    last = lt.lastElement(mp.keySet(cities))
+    pair = mp.get(cities, last)
+    return me.getValue(pair)
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 
-def compareIATA():
-    pass
+def compareIATA(IATA1, IATA2):
+    if IATA1 == IATA2:
+        return 0
+    else:
+        return -1
 
 
 # Funciones de ordenamiento
