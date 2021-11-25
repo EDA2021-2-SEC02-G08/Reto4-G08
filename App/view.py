@@ -84,14 +84,6 @@ while True:
     if inputs == 1:
         print("\nInicializando....")
         analyzer = controller.init()
-        controller.loadAirports(analyzer, airports_file)
-        controller.loadRoutes(analyzer, routes_file)
-        print('\nGrafo dirigido:')
-        print(gr.numEdges(analyzer['directed_Graph']))
-        print(gr.numVertices(analyzer['directed_Graph']))
-        print('\nGrafo no dirigido:')
-        print(gr.numEdges(analyzer['undirected_Graph']))
-        print(gr.numVertices(analyzer['undirected_Graph']))
 
     elif inputs == 2:
         controller.loadData(analyzer, airports_file, routes_file, cities_file)

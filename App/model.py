@@ -100,6 +100,8 @@ def addConnection(analyzer, origin, destination, distance):
     Adiciona las rutas a los grafos dirigido y no dirigido.
     """
     directed = analyzer['directed']
+    addAirportToGraph(directed, origin)
+    addAirportToGraph(directed, destination)
     addConnectionToGraph(directed, origin, destination, distance)
     come = gr.getEdge(directed, origin, destination)
     go = gr.getEdge(directed, destination, origin)

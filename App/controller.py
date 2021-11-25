@@ -67,9 +67,6 @@ def loadRoutes(analyzer, routes_file):
     for route in input_file:
         model.addConnection(analyzer, route['Departure'],
                             route['Destination'], route['distance_km'])
-    for route in input_file:
-        model.undirectedGraph(analyzer, route['Departure'],
-                              route['Destination'], route['distance_km'])
 
 
 def loadCities(analyzer, cities_file):
@@ -104,7 +101,7 @@ def totalCities(analyzer):
 
 
 def getFirstLoadedAirport(analyzer):
-    return model.getFirstLoadedAirport(analyzer)
+    return model.getFirstLoadedAirports(analyzer)
 
 
 def getLastLoadedCity(analyzer):
