@@ -63,7 +63,8 @@ while True:
     inputs = int(input('Seleccione una opción para continuar\n'))
     if inputs == 1:
         print("\nInicializando....")
-        cont = controller.init()
+        analyzer = controller.init()
+        controller.loadAirports(analyzer, airports_file)
 
     elif inputs == 2:
         pass

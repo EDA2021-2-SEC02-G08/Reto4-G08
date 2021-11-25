@@ -56,8 +56,8 @@ def loadAirports(analyzer, airports_file):
                                 delimiter=",")
 
     for airport in input_file:
-        model.graphDirected(analyzer, airport)
-        model.graphNoDirected(analyzer, airport)
+        model.directedGraph(analyzer, airport)
+        # model.undirectedGraph(analyzer, airport)
 
 
 def loadRoutes(analyzer, routes_file):
@@ -66,8 +66,7 @@ def loadRoutes(analyzer, routes_file):
                                 delimiter=",")
 
     for route in input_file:
-        model.addConnection(analyzer, route['Departure'], route['Destination'],
-                            route['distance_km'])
+        pass
 
 
 def loadCities(analyzer, cities_file):

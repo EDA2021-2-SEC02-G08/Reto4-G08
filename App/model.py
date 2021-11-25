@@ -29,6 +29,7 @@ import config as cf
 # from DISClib.ADT import map as mp
 # from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
+from DISClib.Utils import error as error
 assert cf
 
 
@@ -39,55 +40,45 @@ def newAnalyzer():
     """
     Insertar mensaje
     """
-    analyzer = {'directed': None,
-                'no_directed': None,
-                'components': None,
-                'paths': None}
+    analyzer = {'directed_Graph': None,
+                'undirected_Graph': None}
 
-    analyzer['directed'] = gr.newGraph(datastructure='ADJ_LIST',
-                                       directed=True,
-                                       size=14000,
-                                       comparefunction=compareIATA)
+    analyzer['directed_Graph'] = gr.newGraph(datastructure='ADJ_LIST',
+                                             directed=True,
+                                             size=14000,
+                                             comparefunction=compareIATA)
 
-    analyzer['no_directed'] = gr.newGraph(datastructure='ADJ_LIST',
-                                          directed=False,
-                                          size=14000,
-                                          comparefunction=compareIATA)
+    analyzer['undirected_Graph'] = gr.newGraph(datastructure='ADJ_LIST',
+                                               directed=False,
+                                               size=14000,
+                                               comparefunction=compareIATA)
 
     return analyzer
 
 
-def graphDirected(analyzer, airport):
-    origin = airport['IATA']
-    addAirport(analyzer['directed'], origin)
+# Funciones para agregar informacion al catalogo
 
 
-def graphNoDirected(analyzer, airport):
+def directedGraph(analyzer, airport):
     origin = airport['IATA']
-    addAirport(analyzer['no_directed'], origin)
+    addAirport(analyzer['directed_Graph'], origin)
+
+
+def undirectedGraph(analyzer, airport):
+    origin = airport['IATA']
+    addAirport(analyzer['undirected_Graph'], origin)
 
 
 def addAirport(analyzer, origin):
     """
-    Adiciona un aeropuerto, por su código IATA, como un vertice del grafo
+    Esta función adiciona un aeropuerto como un vértice del grafo
     """
-    if not gr.containsVertex(analyzer, origin):
-        gr.insertVertex(analyzer, origin)
+    try:
+        if not gr.containsVertex(analyzer, origin):
+            gr.insertVertex(analyzer, origin)
+    except Exception as exp:
+        error.reraise(exp, 'model:addAirport')
 
-    return analyzer
-
-
-def addConnection(analyzer, origin, destination, distance):
-    """
-    Adiciona un arco entre dos aeropuertos
-    """
-    edge = gr.getEdge(analyzer['connections'], origin, destination)
-    if edge is None:
-        gr.addEdge(analyzer['connections'], origin, destination, distance)
-
-    return analyzer
-
-# Funciones para agregar informacion al catalogo
 
 # Funciones para creacion de datos
 
@@ -96,8 +87,15 @@ def addConnection(analyzer, origin, destination, distance):
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 
-def compareIATA():
-    pass
+def compareIATA(code, airport):
+    """
+    Compara dos aeropuertos
+    """
+    code_IATA = airport['IATA']
+    if code == code_IATA:
+        return 0
+    else:
+        return -1
 
 
 # Funciones de ordenamiento
