@@ -24,6 +24,7 @@
 import config as cf
 import sys
 import controller
+from DISClib.ADT.graph import gr
 assert cf
 
 
@@ -66,6 +67,12 @@ while True:
         analyzer = controller.init()
         controller.loadAirports(analyzer, airports_file)
         controller.loadRoutes(analyzer, routes_file)
+        print('\nGrafo dirigido:')
+        print(gr.numEdges(analyzer['directed_Graph']))
+        print(gr.numVertices(analyzer['directed_Graph']))
+        print('\nGrafo no dirigido:')
+        print(gr.numEdges(analyzer['undirected_Graph']))
+        print(gr.numVertices(analyzer['undirected_Graph']))
 
     elif inputs == 2:
         pass

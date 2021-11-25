@@ -73,11 +73,26 @@ def addAirport(analyzer, origin):
 
 def addConnection(analyzer, origin, destination, distance):
     """
-    Esta función adiciona un arco entre dos aeropuertos
+    Esta función adiciona un arco dirigido entre dos aeropuertos
     """
-    edge = gr.getEdge(analyzer, origin, destination)
+    directedGraph = analyzer['directed_Graph']
+    edge = gr.getEdge(directedGraph, origin, destination)
     if edge is None:
-        gr.addEdge(analyzer, origin, destination, distance)
+        gr.addEdge(directedGraph, origin, destination, distance)
+
+
+def undirectedGraph(analyzer, origin, destination, distance):
+    """
+    Esta función crea el grafo no dirigido a partir del grafo dirigido
+    """
+    directedGraph = analyzer['directed_Graph']
+    undirectedGraph = analyzer['undirected_Graph']
+    edge1 = gr.getEdge(directedGraph, origin, destination)
+    edge2 = gr.getEdge(directedGraph, destination, origin)
+
+    if edge1 is not None:
+        if edge2 is not None:
+            gr.addEdge(undirectedGraph, origin, destination, distance)
 
 
 # Funciones para creacion de datos
