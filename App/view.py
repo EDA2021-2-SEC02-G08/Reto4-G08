@@ -24,7 +24,6 @@
 import config as cf
 import sys
 import controller
-from DISClib.ADT.graph import gr
 assert cf
 
 

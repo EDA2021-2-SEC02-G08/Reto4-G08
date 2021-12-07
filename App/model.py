@@ -43,9 +43,7 @@ def newAnalyzer():
     analyzer = {'directed': None,
                 'no_directed': None,
                 'cities': None,
-                'IATAcodes': None,
-                'components': None,
-                'paths': None}
+                'IATAcodes': None}
 
     analyzer['directed'] = gr.newGraph(datastructure='ADJ_LIST',
                                        directed=True,
