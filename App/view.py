@@ -25,6 +25,7 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT.graph import gr
+from DISClib.ADT import map as mp
 assert cf
 
 
@@ -79,7 +80,7 @@ def printDiGraph(analyzer):
     print('\n=== Airports-Routes DiGraph ===')
     print('Nodes: ' + str(nodes))
     print('Edges: ' + str(edges))
-    print('First and last airports loaded in the DiGraph:')
+    print('First and last airport loaded in the DiGraph:')
     # printAirportData(first)
     # printAirportData(last)
 
@@ -91,9 +92,16 @@ def printGraph(analyzer):
     print('\n=== Airports-Routes Graph ===')
     print('Nodes: ' + str(nodes))
     print('Edges: ' + str(edges))
-    print('First and last airports loaded in the Graph:')
+    print('First and last airport loaded in the Graph:')
     # printAirportData(first)
     # printAirportData(last)
+
+
+def printCity(analyzer):
+    total = mp.size(analyzer['cities'])
+    print('\n=== City Network ===')
+    print('The number of cities are: ' + str(total))
+    print('First and last city loaded in data structure:')
 
 
 """
@@ -112,6 +120,7 @@ while True:
         controller.loadData(analyzer, airports_file, routes_file, cities_file)
         printDiGraph(analyzer)
         printGraph(analyzer)
+        printCity(analyzer)
 
     elif inputs == 3:
         pass
