@@ -68,6 +68,10 @@ def loadRoutes(analyzer, routes_file):
         model.addConnection(analyzer, route['Departure'],
                             route['Destination'], route['distance_km'])
 
+    for route in input_file:
+        model.createGraph(analyzer, route['Departure'],
+                          route['Destination'], route['distance_km'])
+
 
 def loadCities(analyzer, cities_file):
     cities_file = cf.data_dir + cities_file
@@ -80,29 +84,10 @@ def loadCities(analyzer, cities_file):
 
 # Funciones de consulta sobre el catálogo
 
-def totalAirports(analyzer):
-    return model.totalAirports(analyzer)
+
+def getLoadedDiGraph(analyzer):
+    return model.getLoadedDiGraph(analyzer)
 
 
-def totalRoutes(analyzer):
-    return model.totalRoutes(analyzer)
-
-
-def totalAirportsBackAndForth(analyzer):
-    return model.totalAirportsBackAndForth(analyzer)
-
-
-def totalBackAndForthRoutes(analyzer):
-    return model.totalBackAndForthRoutes(analyzer)
-
-
-def totalCities(analyzer):
-    return model.totalCities(analyzer)
-
-
-def getFirstLoadedAirport(analyzer):
-    return model.getFirstLoadedAirports(analyzer)
-
-
-def getLastLoadedCity(analyzer):
-    return model.getLastLoadedCity(analyzer)
+def getLoadedGraph(analyzer):
+    return model.getLoadedGraph(analyzer)

@@ -66,49 +66,47 @@ def newAnalyzer():
 
 # Funciones para agregar informacion al catalogo
 
+
 def addAirport(analyzer, airport):
     """
-    Agrega el vértice que representa un aeropuerto al grafo dirigido y agrega
-    al mapa de códigos IATA la información del aeropuerto.
+    Esta función adiciona un aeropuerto al grafo dirigido
     """
-    vertex = airport['IATA']
-    addAirportToGraph(analyzer['directed'], vertex)
-    mp.put(analyzer['IATAcodes'], vertex, airport)
-
-
-def addAirportToGraph(graph, airport):
-    """
-    Esta función adiciona un aeropuerto como un vértice del grafo
-    """
-    if not gr.containsVertex(graph, airport):
-        gr.insertVertex(graph, airport)
-
-
-def addConnectionToGraph(graph, origin, destination, distance):
-    """
-    Adiciona un arco entre dos aeropuertos a un grafo.
-    """
-    edge = gr.getEdge(graph, origin, destination)
-    if edge is None:
-        gr.addEdge(graph, origin, destination, distance)
+    code = airport['IATA']
+    addVertex(analyzer['directed'], code)
+    mp.put(analyzer['IATAcodes'], code, airport)
 
 
 def addConnection(analyzer, origin, destination, distance):
     """
-    Adiciona las rutas a los grafos dirigido y no dirigido.
+    Adiciona un arco dirigido entre dos aeropuertos
     """
-    directed = analyzer['directed']
-    addAirportToGraph(directed, origin)
-    addAirportToGraph(directed, destination)
-    addConnectionToGraph(directed, origin, destination, distance)
-    come = gr.getEdge(directed, origin, destination)
-    go = gr.getEdge(directed, destination, origin)
-    comeNgo = (come is not None) and (go is not None)
-    if comeNgo:
-        ND = analyzer['no_directed']
-        addAirportToGraph(ND, origin)
-        addAirportToGraph(ND, destination)
-        addConnectionToGraph(ND, origin, destination, distance)
+    digraph = analyzer['directed']
+    edge = gr.getEdge(digraph, origin, destination)
+
+    if edge is None:
+        gr.addEdge(digraph, origin, destination, distance)
+
+
+def createGraph(analyzer, origin, destination, distance):
+    """
+    Esta función crea el grafo no dirigido a partir del grafo dirigido
+    """
+    digraph = analyzer['directed']
+    graph = analyzer['no_directed']
+    edge1 = gr.getEdge(digraph, origin, destination)
+    edge2 = gr.getEdge(digraph, destination, origin)
+    if (edge1 is not None) and (edge2 is not None):
+        addVertex(graph, origin)
+        addVertex(graph, destination)
+        gr.addEdge(graph, origin, destination, distance)
+
+
+def addVertex(analyzer, airport):
+    """
+    Esta función adiciona un vértice al grafo
+    """
+    if not gr.containsVertex(analyzer, airport):
+        gr.insertVertex(analyzer, airport)
 
 
 def addCity(analyzer, city):
@@ -119,57 +117,28 @@ def addCity(analyzer, city):
 
 # Funciones de consulta
 
-def totalAirports(analyzer):
-    """
-    Retorna el total de aeropuertos
-    """
-    return gr.numVertices(analyzer['directed'])
 
-
-def totalRoutes(analyzer):
-    """
-    Retorna el total de rutas
-    """
-    return gr.numEdges(analyzer['directed'])
-
-
-def totalAirportsBackAndForth(analyzer):
-    """
-    Retorna el total de aeropuertos con al menos una ida y vuelta
-    """
-    return gr.numVertices(analyzer['no_directed'])
-
-
-def totalBackAndForthRoutes(analyzer):
-    """
-    Retorna el total de rutas de ida y vuelta
-    """
-    return gr.numEdges(analyzer['no_directed'])
-
-
-def totalCities(analyzer):
-    """
-    Retorna el total de ciudades cargadas.
-    """
-    return mp.size(analyzer['cities'])
-
-
-def getFirstLoadedAirports(analyzer):
+def getLoadedDiGraph(analyzer):
     airports = analyzer['IATAcodes']
-    directed = analyzer['directed']
-    N_directed = analyzer['no_directed']
-    firstDirected = lt.firstElement(gr.vertices(directed))
-    firstNDirected = lt.firstElement(gr.vertices(N_directed))
-    pair1 = mp.get(airports, firstDirected)
-    pair2 = mp.get(airports, firstNDirected)
-    return me.getValue(pair1), me.getValue(pair2)
+    digraph = analyzer['directed']
+    first = lt.firstElement(gr.vertices(digraph))
+    last = lt.lastElement(gr.vertices(digraph))
+    pair = mp.get(airports, first)
+    pair1 = mp.get(airports, last)
+
+    return me.getValue(pair), me.getValue(pair1)
 
 
-def getLastLoadedCity(analyzer):
-    cities = analyzer['cities']
-    last = lt.lastElement(mp.keySet(cities))
-    pair = mp.get(cities, last)
-    return me.getValue(pair)
+def getLoadedGraph(analyzer):
+    airports = analyzer['IATAcodes']
+    graph = analyzer['no_directed']
+    first = lt.firstElement(gr.vertices(graph))
+    last = lt.lastElement(gr.vertices(graph))
+    pair = mp.get(airports, first)
+    pair1 = mp.get(airports, last)
+
+    return me.getValue(pair), me.getValue(pair1)
+
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

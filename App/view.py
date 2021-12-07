@@ -24,6 +24,7 @@
 import config as cf
 import sys
 import controller
+from DISClib.ADT.graph import gr
 assert cf
 
 
@@ -36,7 +37,7 @@ operación solicitada
 
 
 def printMenu():
-    print("Bienvenido")
+    print("\nBienvenido")
     print("1- Inicializar Analizador")
     print("2- Cargar información en el catálogo")
     print("3- Obtener aeropuertos de interconexión")
@@ -50,9 +51,9 @@ def printMenu():
 catalog = None
 
 
-airports_file = 'airports_full.csv'
-routes_file = 'routes_full.csv'
-cities_file = 'worldcities.csv'
+airports_file = 'airports-utf8-small.csv'
+routes_file = 'routes-utf8-small.csv'
+cities_file = 'worldcities-utf8.csv'
 
 
 """
@@ -61,15 +62,38 @@ Funciones de impresión
 
 
 def printAirportData(airport):
-    print('Nombre: {} Ciudad: {} País: {} Latitud: {} Longitud: {}'.format(
-        airport['Name'], airport['City'], airport['Country'],
-        airport['Latitude'], airport['Longitude']))
+    print('Name:{}, City: {}, Country: {}, Latitude: {}, Longitude: {}'.format(
+          airport['Name'], airport['City'], airport['Country'],
+          airport['Latitude'], airport['Longitude']))
 
 
 def printCityData(city):
-    print('Nombre: {} Población: {} Latitud: {} Longitud: {}'.format(
-        city['city_ascii'], city['population'], city['lat'],
-        city['lng']))
+    print('Name: {}, Country: {}, Latitude: {}, Longitude: {}'.format(
+          city['city_ascii'], city['country'], city['lat'], city['lng']))
+
+
+def printDiGraph(analyzer):
+    nodes = gr.numVertices(analyzer['directed'])
+    edges = gr.numEdges(analyzer['directed'])
+    # first, last = controller.getLoadedDiGraph(analyzer)
+    print('\n=== Airports-Routes DiGraph ===')
+    print('Nodes: ' + str(nodes))
+    print('Edges: ' + str(edges))
+    print('First and last airports loaded in the DiGraph:')
+    # printAirportData(first)
+    # printAirportData(last)
+
+
+def printGraph(analyzer):
+    nodes = gr.numVertices(analyzer['no_directed'])
+    edges = gr.numEdges(analyzer['no_directed'])
+    # first, last = controller.getLoadedGraph(analyzer)
+    print('\n=== Airports-Routes Graph ===')
+    print('Nodes: ' + str(nodes))
+    print('Edges: ' + str(edges))
+    print('First and last airports loaded in the Graph:')
+    # printAirportData(first)
+    # printAirportData(last)
 
 
 """
@@ -86,24 +110,8 @@ while True:
 
     elif inputs == 2:
         controller.loadData(analyzer, airports_file, routes_file, cities_file)
-        NAirportsD = controller.totalAirports(analyzer)
-        NAirportsN = controller.totalAirportsBackAndForth(analyzer)
-        NRoutesD = controller.totalRoutes(analyzer)
-        NRoutesN = controller.totalBackAndForthRoutes(analyzer)
-        NCities = controller.totalCities(analyzer)
-        firstD, firstND = controller.getFirstLoadedAirport(analyzer)
-        last = controller.getLastLoadedCity(analyzer)
-        print('Total de aeropuertos: ' + str(NAirportsD))
-        print('Total de aeropuertos ida y vuelta: ' + str(NAirportsN))
-        print('Total de rutas: ' + str(NRoutesD))
-        print('Total de rutas ida y vuelta: ' + str(NRoutesN))
-        print('Total de ciudades: ' + str(NCities))
-        print('Primer aeropuerto cargado en el grafo dirigido:')
-        printAirportData(firstD)
-        print('Primer aeropuerto cargado en el grafo no dirigido:')
-        printAirportData(firstND)
-        print('Última ciudad cargada:')
-        printCityData(last)
+        printDiGraph(analyzer)
+        printGraph(analyzer)
 
     elif inputs == 3:
         pass
