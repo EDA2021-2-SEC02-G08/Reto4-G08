@@ -69,44 +69,47 @@ def newAnalyzer():
 
 def addAirport(analyzer, airport):
     """
-    Esta función adiciona un aeropuerto al grafo dirigido
+    Agrega el vértice que representa un aeropuerto al grafo dirigido y agrega
+    al mapa de códigos IATA la información del aeropuerto.
     """
-    code = airport['IATA']
-    addVertex(analyzer['directed'], code)
-    mp.put(analyzer['IATAcodes'], code, airport)
+    vertex = airport['IATA']
+    addAirportToGraph(analyzer['directed'], vertex)
+    mp.put(analyzer['IATAcodes'], vertex, airport)
+
+
+def addAirportToGraph(graph, airport):
+    """
+    Esta función adiciona un aeropuerto como un vértice del grafo
+    """
+    if not gr.containsVertex(graph, airport):
+        gr.insertVertex(graph, airport)
+
+
+def addConnectionToGraph(graph, origin, destination, distance):
+    """
+    Adiciona un arco entre dos aeropuertos a un grafo.
+    """
+    edge = gr.getEdge(graph, origin, destination)
+    if edge is None:
+        gr.addEdge(graph, origin, destination, distance)
 
 
 def addConnection(analyzer, origin, destination, distance):
     """
-    Adiciona un arco dirigido entre dos aeropuertos
+    Adiciona las rutas a los grafos dirigido y no dirigido.
     """
-    digraph = analyzer['directed']
-    edge = gr.getEdge(digraph, origin, destination)
-
-    if edge is None:
-        gr.addEdge(digraph, origin, destination, distance)
-
-
-def createGraph(analyzer, origin, destination, distance):
-    """
-    Esta función crea el grafo no dirigido a partir del grafo dirigido
-    """
-    digraph = analyzer['directed']
-    graph = analyzer['no_directed']
-    edge1 = gr.getEdge(digraph, origin, destination)
-    edge2 = gr.getEdge(digraph, destination, origin)
-    if (edge1 is not None) and (edge2 is not None):
-        addVertex(graph, origin)
-        addVertex(graph, destination)
-        gr.addEdge(graph, origin, destination, distance)
-
-
-def addVertex(analyzer, airport):
-    """
-    Esta función adiciona un vértice al grafo
-    """
-    if not gr.containsVertex(analyzer, airport):
-        gr.insertVertex(analyzer, airport)
+    directed = analyzer['directed']
+    addAirportToGraph(directed, origin)
+    addAirportToGraph(directed, destination)
+    addConnectionToGraph(directed, origin, destination, distance)
+    come = gr.getEdge(directed, origin, destination)
+    go = gr.getEdge(directed, destination, origin)
+    comeNgo = (come is not None) and (go is not None)
+    if comeNgo:
+        ND = analyzer['no_directed']
+        addAirportToGraph(ND, origin)
+        addAirportToGraph(ND, destination)
+        addConnectionToGraph(ND, origin, destination, distance)
 
 
 def addCity(analyzer, city):
