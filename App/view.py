@@ -99,13 +99,48 @@ def printGraph(analyzer):
 
 
 def printCity(analyzer):
-    cities = mp.valueSet(analyzer['cities'])
-    total = mp.size(analyzer['cities'])
+    cities = analyzer['cities']
+    total = lt.size(analyzer['cities'])
     print('\n=== City Network ===')
     print('The number of cities are: ' + str(total))
     print('First and last city loaded in data structure:')
     printCityData(lt.firstElement(cities))
     printCityData(lt.lastElement(cities))
+
+
+def ciudadesRepetidas(analyzer, salida, llegada):
+    list1 = lt.newList(datastructure='ARRAY_LIST')
+    list2 = lt.newList(datastructure='ARRAY_LIST')
+    for city in lt.iterator(analyzer['cities']):
+        if city['city'].lower() == salida:
+            lt.addLast(list1, city)
+        if city['city'].lower() == llegada:
+            lt.addLast(list2, city)
+    if lt.size(list1) > 1:
+        count = 1
+        for element in lt.iterator(list1):
+            print(str(count))
+            printCityData(element)
+            count += 1
+        num = int(input('\nIngrese la ciudad: \n'))
+        salida = lt.getElement(list1, num)
+    elif lt.size(list1) == 1:
+        salida = lt.getElement(list1, 1)
+    else:
+        salida = None
+    if lt.size(list2) > 1:
+        count = 1
+        for element in lt.iterator(list2):
+            print(str(count))
+            printCityData(element)
+            count += 1
+        num = int(input('\nIngrese la ciudad: \n'))
+        llegada = lt.getElement(list2, num)
+    elif lt.size(list2) == 1:
+        llegada = lt.getElement(list2, 1)
+    else:
+        llegada = None
+    return salida, llegada
 
 
 def printClosed(analyzer, adjacents, airport):
@@ -152,7 +187,11 @@ while True:
         pass
 
     elif inputs == 5:
-        pass
+        Departure = str(input('Ingrese la ciudad de partida: ')).lower()
+        Arrival = str(input('Ingrese la ciudad de llegada: ')).lower()
+        salida, llegada = ciudadesRepetidas(analyzer, Departure, Arrival)
+        print(salida)
+        print(llegada)
 
     elif inputs == 6:
         pass

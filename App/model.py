@@ -49,6 +49,7 @@ def newAnalyzer():
     analyzer = {'directed': None,
                 'no_directed': None,
                 'cities': None,
+                'cities_map'
                 'IATAcodes': None,
                 'components': None}
 
@@ -62,8 +63,7 @@ def newAnalyzer():
                                           size=10000,
                                           comparefunction=compareIATA)
 
-    analyzer['cities'] = mp.newMap(numelements=41000,
-                                   maptype='PROBING')
+    analyzer['cities'] = lt.newList(datastructure='ARRAY_LIST')
 
     analyzer['IATAcodes'] = mp.newMap(numelements=10000,
                                       maptype='PROBING')
@@ -120,9 +120,7 @@ def addConnection(analyzer, origin, destination, distance):
 
 
 def addCity(analyzer, city):
-    cities = analyzer['cities']
-    cityName = city['city_ascii'].lower()
-    mp.put(cities, cityName, city)
+    lt.addLast(analyzer['cities'], city)
 
 
 def getSCCs(analyzer):

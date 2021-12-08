@@ -74,7 +74,6 @@ def loadCities(analyzer, cities_file):
     cities_file = cf.data_dir + cities_file
     input_file = csv.DictReader(open(cities_file, encoding="utf-8"),
                                 delimiter=",")
-
     for city in input_file:
         model.addCity(analyzer, city)
 
