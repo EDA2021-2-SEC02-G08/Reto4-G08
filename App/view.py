@@ -26,7 +26,6 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
-from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
 assert cf
 
@@ -121,15 +120,15 @@ def printClosed(analyzer, adjacents, airport):
         first = lt.subList(adjacents, 1, 3)
         last = lt.subList(adjacents, (total-2), 3)
         for element in lt.iterator(first):
-            info = mp.get(analyzer['IATAcodes'], element)
-            printAirportData(me.getValue(info))
+            info = mp.get(analyzer['IATAcodes'], element)['value']
+            printAirportData(info)
         for element in lt.iterator(last):
-            info = mp.get(analyzer['IATAcodes'], element)
-            printAirportData(me.getValue(info))
+            info = mp.get(analyzer['IATAcodes'], element)['value']
+            printAirportData(info)
     else:
         for element in lt.iterator(adjacents):
-            info = mp.get(analyzer['IATAcodes'], element)
-            printAirportData(me.getValue(info))
+            info = mp.get(analyzer['IATAcodes'], element)['value']
+            printAirportData(info)
 
 
 """

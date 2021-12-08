@@ -28,7 +28,6 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
-from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
 from DISClib.Algorithms.Sorting import mergesort as mg
 assert cf
@@ -131,9 +130,9 @@ def getLoadedDiGraph(analyzer):
     digraph = analyzer['directed']
     first = lt.firstElement(gr.vertices(digraph))
     last = lt.lastElement(gr.vertices(digraph))
-    pair = mp.get(airports, first)
-    pair1 = mp.get(airports, last)
-    return me.getValue(pair), me.getValue(pair1)
+    pair = mp.get(airports, first)['value']
+    pair1 = mp.get(airports, last)['value']
+    return pair, pair1
 
 
 def getLoadedGraph(analyzer):
@@ -141,9 +140,9 @@ def getLoadedGraph(analyzer):
     graph = analyzer['no_directed']
     first = lt.firstElement(gr.vertices(graph))
     last = lt.lastElement(gr.vertices(graph))
-    pair = mp.get(airports, first)
-    pair1 = mp.get(airports, last)
-    return me.getValue(pair), me.getValue(pair1)
+    pair = mp.get(airports, first)['value']
+    pair1 = mp.get(airports, last)['value']
+    return pair, pair1
 
 
 def getClosedAirport(analyzer, airport):
