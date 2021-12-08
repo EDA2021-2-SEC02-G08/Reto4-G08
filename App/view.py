@@ -103,8 +103,8 @@ def printGraph(analyzer):
 
 
 def printCity(analyzer):
-    cities = mp.valueSet(analyzer['cities'])
-    total = mp.size(analyzer['cities'])
+    cities = mp.valueSet(analyzer['cities_map'])
+    total = lt.size(analyzer['cities'])
     print('\n=== City Network ===')
     print('The number of cities are: ' + str(total))
     print('First and last city loaded in data structure:')
