@@ -29,6 +29,10 @@ import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
+from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dfs
+from DISClib.Algorithms.Graphs import prim
+from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.ADT.graph import gr
 assert cf
 
@@ -43,7 +47,8 @@ def newAnalyzer():
     analyzer = {'directed': None,
                 'no_directed': None,
                 'cities': None,
-                'IATAcodes': None}
+                'IATAcodes': None,
+                'components': None}
 
     analyzer['directed'] = gr.newGraph(datastructure='ADJ_LIST',
                                        directed=True,
@@ -136,6 +141,32 @@ def getLoadedGraph(analyzer):
     pair = mp.get(airports, first)
     pair1 = mp.get(airports, last)
     return me.getValue(pair), me.getValue(pair1)
+
+
+def getHubs(analyzer):
+    """
+    Retorna los 5 aeropuertos más interconectados y el total de aeropuertos en la red.
+    """
+    pass
+
+
+def getClusters(analyzer):
+    """
+    Guarda el número de clusters en la red de aeropuertos.
+    """
+    analyzer['components'] = scc.KosarajuSCC(analyzer['directed'])
+
+
+def hasPathTo(analyzer, origin, destination):
+    digraph = analyzer['dirigido']
+    search = dfs.DepthFirstSearch(digraph, origin)
+    return dfs.hasPathTo(search, destination)
+
+
+def getRouteWithMiles(analyzer, miles):
+    digraph = analyzer['dirigido']
+    search = prim.PrimMST(digraph)
+
 
 
 def getClosedAirport(analyzer, airport):
