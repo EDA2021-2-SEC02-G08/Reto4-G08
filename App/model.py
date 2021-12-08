@@ -122,9 +122,8 @@ def addConnection(analyzer, origin, destination, distance):
 def addCity(analyzer, city):
     cityName = city['city_ascii'].lower()
     if mp.contains(analyzer['cities_map'], cityName):
-        pass
+        lt.addLast(analyzer['cities'], city)
     mp.put(analyzer['cities_map'], cityName, city)
-    lt.addLast(analyzer['cities'], city)
 
 
 # Funciones de consulta

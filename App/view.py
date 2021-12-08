@@ -102,14 +102,21 @@ def printGraph(analyzer):
     printAirportData(last)
 
 
-def printCity(analyzer):
+def printCity(analyzer, total):
     cities = mp.valueSet(analyzer['cities_map'])
-    total = lt.size(analyzer['cities'])
     print('\n=== City Network ===')
     print('The number of cities are: ' + str(total))
     print('First and last city loaded in data structure:')
     printCityData(lt.firstElement(cities))
     printCityData(lt.lastElement(cities))
+
+
+def ciudadesRepetidas(analyzer, salida, llegada):
+    for city in lt.iterator(analyzer['cities']):
+        if city == salida:
+            pass
+        if city == llegada:
+            pass
 
 
 def printClosed(analyzer, adjacents, airport):
@@ -144,10 +151,11 @@ while True:
         analyzer = controller.init()
 
     elif inputs == 2:
-        controller.loadData(analyzer, airports_file, routes_file, cities_file)
+        controller.loadData(analyzer, airports_file, routes_file)
+        total = controller.loadCities(analyzer, cities_file)
         printDiGraph(analyzer)
         printGraph(analyzer)
-        printCity(analyzer)
+        printCity(analyzer, total)
 
     elif inputs == 3:
         pass
@@ -156,7 +164,8 @@ while True:
         pass
 
     elif inputs == 5:
-        pass
+        Departure = str(input('Ingrese la ciudad de partida: ')).lower()
+        Arrival = str(input('Ingrese la ciudad de llegada: ')).lower()
 
     elif inputs == 6:
         pass
