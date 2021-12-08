@@ -24,8 +24,9 @@
 import config as cf
 import sys
 import controller
-from DISClib.ADT.graph import gr
+from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.ADT.graph import gr
 assert cf
 
 
@@ -76,32 +77,35 @@ def printCityData(city):
 def printDiGraph(analyzer):
     nodes = gr.numVertices(analyzer['directed'])
     edges = gr.numEdges(analyzer['directed'])
-    # first, last = controller.getLoadedDiGraph(analyzer)
+    first, last = controller.getLoadedDiGraph(analyzer)
     print('\n=== Airports-Routes DiGraph ===')
     print('Nodes: ' + str(nodes))
     print('Edges: ' + str(edges))
     print('First and last airport loaded in the DiGraph:')
-    # printAirportData(first)
-    # printAirportData(last)
+    printAirportData(first)
+    printAirportData(last)
 
 
 def printGraph(analyzer):
     nodes = gr.numVertices(analyzer['no_directed'])
     edges = gr.numEdges(analyzer['no_directed'])
-    # first, last = controller.getLoadedGraph(analyzer)
+    first, last = controller.getLoadedGraph(analyzer)
     print('\n=== Airports-Routes Graph ===')
     print('Nodes: ' + str(nodes))
     print('Edges: ' + str(edges))
     print('First and last airport loaded in the Graph:')
-    # printAirportData(first)
-    # printAirportData(last)
+    printAirportData(first)
+    printAirportData(last)
 
 
 def printCity(analyzer):
+    cities = mp.valueSet(analyzer['cities'])
     total = mp.size(analyzer['cities'])
     print('\n=== City Network ===')
     print('The number of cities are: ' + str(total))
     print('First and last city loaded in data structure:')
+    printCityData(lt.firstElement(cities))
+    printCityData(lt.lastElement(cities))
 
 
 """
