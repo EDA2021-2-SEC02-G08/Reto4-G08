@@ -44,9 +44,10 @@ def init():
 # Funciones para la carga de datos
 
 
-def loadData(analyzer, airports_file, routes_file):
+def loadData(analyzer, airports_file, routes_file, cities_file):
     loadAirports(analyzer, airports_file)
     loadRoutes(analyzer, routes_file)
+    loadCities(analyzer, cities_file)
 
 
 def loadAirports(analyzer, airports_file):
@@ -72,11 +73,8 @@ def loadCities(analyzer, cities_file):
     cities_file = cf.data_dir + cities_file
     input_file = csv.DictReader(open(cities_file, encoding="utf-8"),
                                 delimiter=",")
-    count = 0
     for city in input_file:
         model.addCity(analyzer, city)
-        count += 1
-    return count
 
 
 # Funciones de consulta sobre el catálogo

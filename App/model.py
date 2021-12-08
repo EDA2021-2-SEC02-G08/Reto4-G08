@@ -60,9 +60,6 @@ def newAnalyzer():
 
     analyzer['cities'] = lt.newList(datastructure='ARRAY_LIST')
 
-    analyzer['cities_map'] = mp.newMap(numelements=41000,
-                                       maptype='PROBING')
-
     analyzer['IATAcodes'] = mp.newMap(numelements=10000,
                                       maptype='PROBING')
 
@@ -120,10 +117,7 @@ def addConnection(analyzer, origin, destination, distance):
 
 
 def addCity(analyzer, city):
-    cityName = city['city_ascii'].lower()
-    if mp.contains(analyzer['cities_map'], cityName):
-        lt.addLast(analyzer['cities'], city)
-    mp.put(analyzer['cities_map'], cityName, city)
+    lt.addLast(analyzer['cities'], city)
 
 
 # Funciones de consulta
