@@ -69,11 +69,12 @@ def newAnalyzer():
 
 def addAirport(analyzer, airport):
     """
-    Agrega el vértice que representa un aeropuerto al grafo dirigido y agrega
+    Agrega el vértice que representa un aeropuerto al grafo y agrega
     al mapa de códigos IATA la información del aeropuerto.
     """
     vertex = airport['IATA']
     addAirportToGraph(analyzer['directed'], vertex)
+    addAirportToGraph(analyzer['no_directed'], vertex)
     mp.put(analyzer['IATAcodes'], vertex, airport)
 
 
@@ -98,18 +99,14 @@ def addConnection(analyzer, origin, destination, distance):
     """
     Adiciona las rutas a los grafos dirigido y no dirigido.
     """
-    directed = analyzer['directed']
-    addAirportToGraph(directed, origin)
-    addAirportToGraph(directed, destination)
-    addConnectionToGraph(directed, origin, destination, distance)
-    come = gr.getEdge(directed, origin, destination)
-    go = gr.getEdge(directed, destination, origin)
+    digraph = analyzer['directed']
+    addConnectionToGraph(digraph, origin, destination, distance)
+    come = gr.getEdge(digraph, origin, destination)
+    go = gr.getEdge(digraph, destination, origin)
     comeNgo = (come is not None) and (go is not None)
     if comeNgo:
-        ND = analyzer['no_directed']
-        addAirportToGraph(ND, origin)
-        addAirportToGraph(ND, destination)
-        addConnectionToGraph(ND, origin, destination, distance)
+        graph = analyzer['no_directed']
+        addConnectionToGraph(graph, origin, destination, distance)
 
 
 def addCity(analyzer, city):
@@ -128,7 +125,6 @@ def getLoadedDiGraph(analyzer):
     last = lt.lastElement(gr.vertices(digraph))
     pair = mp.get(airports, first)
     pair1 = mp.get(airports, last)
-
     return me.getValue(pair), me.getValue(pair1)
 
 
@@ -139,9 +135,14 @@ def getLoadedGraph(analyzer):
     last = lt.lastElement(gr.vertices(graph))
     pair = mp.get(airports, first)
     pair1 = mp.get(airports, last)
-
     return me.getValue(pair), me.getValue(pair1)
 
+
+def getClosedAirport(analyzer, airport):
+    default = None
+    if mp.contains(analyzer['IATAcodes'], airport):
+        default = gr.adjacents(analyzer['directed'], airport)
+    return default
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 

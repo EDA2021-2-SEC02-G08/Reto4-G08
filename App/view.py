@@ -108,6 +108,11 @@ def printCity(analyzer):
     printCityData(lt.lastElement(cities))
 
 
+def printClosed(analyzer, adjacents, airport):
+    print('=== Airports-Routes DiGraph ===')
+    print('Resulting number ')
+
+
 """
 Menu principal
 """
@@ -139,7 +144,9 @@ while True:
         pass
 
     elif inputs == 7:
-        pass
+        airport = str(input('Closing the airport with IATA code: ')).upper()
+        adjacents = controller.getClosedAirport(analyzer, airport)
+        print(adjacents)
 
     else:
         sys.exit(0)

@@ -68,10 +68,6 @@ def loadRoutes(analyzer, routes_file):
         model.addConnection(analyzer, route['Departure'],
                             route['Destination'], route['distance_km'])
 
-    for route in input_file:
-        model.createGraph(analyzer, route['Departure'],
-                          route['Destination'], route['distance_km'])
-
 
 def loadCities(analyzer, cities_file):
     cities_file = cf.data_dir + cities_file
@@ -91,3 +87,7 @@ def getLoadedDiGraph(analyzer):
 
 def getLoadedGraph(analyzer):
     return model.getLoadedGraph(analyzer)
+
+
+def getClosedAirport(analyzer, airport):
+    return model.getClosedAirport(analyzer, airport)
