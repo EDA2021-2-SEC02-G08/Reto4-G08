@@ -76,12 +76,10 @@ def printCityData(city):
 
 def printDiGraph(analyzer):
     nodes = gr.numVertices(analyzer['directed'])
-    routes = analyzer['DiGraphRoutes']
     edges = gr.numEdges(analyzer['directed'])
     first, last = controller.getLoadedDiGraph(analyzer)
     print('\n=== Airports-Routes DiGraph ===')
     print('Nodes: ' + str(nodes))
-    print('Routes: ' + str(routes))
     print('Edges: ' + str(edges))
     print('First and last airport loaded in the DiGraph:')
     printAirportData(first)
@@ -90,12 +88,10 @@ def printDiGraph(analyzer):
 
 def printGraph(analyzer):
     nodes = gr.numVertices(analyzer['no_directed'])
-    routes = analyzer['GraphRoutes']
     edges = gr.numEdges(analyzer['no_directed'])
     first, last = controller.getLoadedGraph(analyzer)
     print('\n=== Airports-Routes Graph ===')
     print('Nodes: ' + str(nodes))
-    print('Routes: ' + str(routes))
     print('Edges: ' + str(edges))
     print('First and last airport loaded in the Graph:')
     printAirportData(first)
@@ -150,7 +146,7 @@ while True:
         printCity(analyzer)
 
     elif inputs == 3:
-        pass
+        print(analyzer['components'])
 
     elif inputs == 4:
         pass

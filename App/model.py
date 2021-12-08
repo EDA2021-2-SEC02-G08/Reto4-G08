@@ -110,7 +110,6 @@ def addConnection(analyzer, origin, destination, distance):
     # Adiciona las rutas al grafo dirigido
     digraph = analyzer['directed']
     addConnectionToGraph(digraph, origin, destination, distance)
-    analyzer['DiGraphRoutes'] += 1
 
     # Adiciona las rutas al grafo no dirigido
     go = gr.getEdge(digraph, origin, destination)
@@ -118,7 +117,6 @@ def addConnection(analyzer, origin, destination, distance):
     if (go is not None) and (come is not None):
         graph = analyzer['no_directed']
         addConnectionToGraph(graph, origin, destination, distance)
-        analyzer['GraphRoutes'] += 1
 
 
 def addCity(analyzer, city):
