@@ -153,7 +153,8 @@ def getLoadedGraph(analyzer):
 
 def getHubs(analyzer):
     """
-    Retorna los 5 aeropuertos más interconectados y el total de aeropuertos en la red.
+    Retorna los 5 aeropuertos más interconectados y el total de aeropuertos 
+    en la red.
     """
     digraph = analyzer['directed']
     IATAs = analyzer['IATAcodes']
