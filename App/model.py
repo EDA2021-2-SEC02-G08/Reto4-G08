@@ -49,7 +49,6 @@ def newAnalyzer():
     analyzer = {'directed': None,
                 'no_directed': None,
                 'cities': None,
-                'cities_map'
                 'IATAcodes': None,
                 'components': None}
 
