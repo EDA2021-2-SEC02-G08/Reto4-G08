@@ -28,6 +28,12 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
+from DISClib.Algorithms.Sorting import insertionsort as ins
+from DISClib.Algorithms.Graphs import scc
+from DISClib.Algorithms.Graphs import dfs
+from DISClib.Algorithms.Graphs import prim
+from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.ADT.graph import gr
 from DISClib.Algorithms.Sorting import mergesort as mg
 assert cf
@@ -44,8 +50,7 @@ def newAnalyzer():
                 'no_directed': None,
                 'cities': None,
                 'IATAcodes': None,
-                'GraphRoutes': 0,
-                'DiGraphRoutes': 0}
+                'components': None}
 
     analyzer['directed'] = gr.newGraph(datastructure='ADJ_LIST',
                                        directed=True,
@@ -122,6 +127,13 @@ def addCity(analyzer, city):
     mp.put(cities, cityName, city)
 
 
+def getSCCs(analyzer):
+    """
+    Guarda el número de clusters en la red de aeropuertos.
+    """
+    analyzer['components'] = scc.KosarajuSCC(analyzer['directed'])
+
+
 # Funciones de consulta
 
 
@@ -145,12 +157,59 @@ def getLoadedGraph(analyzer):
     return pair, pair1
 
 
+def getHubs(analyzer):
+    """
+    Retorna los 5 aeropuertos más interconectados y el total de aeropuertos 
+    en la red.
+    """
+    digraph = analyzer['directed']
+    IATAs = analyzer['IATAcodes']
+    airports = gr.vertices(digraph)
+    mostCnctd = lt.subList(mp.valueSet(IATAs), 1, 5)
+    mostCnctd = ins.sort(mostCnctd, cmpConnections)
+    for airport in lt.iterator(airports):
+        last = lt.lastElement(mostCnctd)
+        Nlast = getAirportConnections(analyzer, last['IATA'])
+        N_comp = getAirportConnections(analyzer, airport)
+        if N_comp > Nlast:
+            pair = mp.get(IATAs, airport)
+            info = me.getValue(pair)
+            lt.removeLast(mostCnctd)
+            lt.addLast(mostCnctd, info)
+            mostCnctd = ins.sort(mostCnctd, cmpConnections)
+
+    return mostCnctd
+
+
+def getClusters(analyzer):
+    return analyzer['components']['components']
+
+
+def hasPathBetween(analyzer, origin, destination):
+    comps = analyzer['components']
+    return scc.stronglyConnected(comps, origin, destination)
+
+
+def getRouteWithMiles(analyzer, miles):
+    digraph = analyzer['dirigido']
+    search = prim.PrimMST(digraph)
+
+
+
 def getClosedAirport(analyzer, airport):
     default = None
     if mp.contains(analyzer['IATAcodes'], airport):
         default = gr.adjacents(analyzer['directed'], airport)
         mg.sort(default, cmpSort)
     return default
+
+
+# Funciones auxiliares
+
+def getAirportConnections(analyzer, airport):
+    digraph = analyzer['dirigido']
+    N = gr.indegree(digraph, airport) + gr.outdegree(digraph, airport)
+    return N
 
 # Funciones utilizadas para comparar elementos dentro de una lista
 
@@ -167,3 +226,15 @@ def compareIATA(code, airport):
 
 def cmpSort(iata1, iata2):
     return iata1[0] < iata2[0]
+
+
+def cmpConnections(analyzer, airport1, airport2):
+    digraph = analyzer['dirigido']
+    adj1 = getAirportConnections(analyzer, airport1['IATA'])
+    adj2 = getAirportConnections(analyzer, airport2['IATA'])
+    if adj1 > adj2:
+        return True
+    else:
+        return False
+
+# Funciones de ordenamiento

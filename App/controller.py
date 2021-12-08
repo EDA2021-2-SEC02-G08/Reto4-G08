@@ -48,6 +48,7 @@ def loadData(analyzer, airports_file, routes_file, cities_file):
     loadAirports(analyzer, airports_file)
     loadRoutes(analyzer, routes_file)
     loadCities(analyzer, cities_file)
+    getSCCs(analyzer)
 
 
 def loadAirports(analyzer, airports_file):
@@ -78,6 +79,9 @@ def loadCities(analyzer, cities_file):
         model.addCity(analyzer, city)
 
 
+def getSCCs(analyzer):
+    model.getSCCs(analyzer)
+
 # Funciones de consulta sobre el catálogo
 
 
@@ -87,6 +91,14 @@ def getLoadedDiGraph(analyzer):
 
 def getLoadedGraph(analyzer):
     return model.getLoadedGraph(analyzer)
+
+
+def getClusters(analyzer):
+    return model.getClusters(analyzer)
+
+
+def hasPathBetween(analyzer, origin, destination):
+    return model.hasPathBetween(analyzer, origin, destination)
 
 
 def getClosedAirport(analyzer, airport):
