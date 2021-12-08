@@ -26,6 +26,7 @@ import sys
 import controller
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
 assert cf
 
@@ -76,10 +77,12 @@ def printCityData(city):
 
 def printDiGraph(analyzer):
     nodes = gr.numVertices(analyzer['directed'])
+    routes = analyzer['DiGraphRoutes']
     edges = gr.numEdges(analyzer['directed'])
     first, last = controller.getLoadedDiGraph(analyzer)
     print('\n=== Airports-Routes DiGraph ===')
     print('Nodes: ' + str(nodes))
+    print('Routes: ' + str(routes))
     print('Edges: ' + str(edges))
     print('First and last airport loaded in the DiGraph:')
     printAirportData(first)
@@ -88,10 +91,12 @@ def printDiGraph(analyzer):
 
 def printGraph(analyzer):
     nodes = gr.numVertices(analyzer['no_directed'])
+    routes = analyzer['GraphRoutes']
     edges = gr.numEdges(analyzer['no_directed'])
     first, last = controller.getLoadedGraph(analyzer)
     print('\n=== Airports-Routes Graph ===')
     print('Nodes: ' + str(nodes))
+    print('Routes: ' + str(routes))
     print('Edges: ' + str(edges))
     print('First and last airport loaded in the Graph:')
     printAirportData(first)
@@ -109,8 +114,22 @@ def printCity(analyzer):
 
 
 def printClosed(analyzer, adjacents, airport):
-    print('=== Airports-Routes DiGraph ===')
-    print('Resulting number ')
+    total = lt.size(adjacents)
+    print('There are ' + str(total) + ' airports affected by ' + str(airport))
+    print('The first and last 3 airports affected are:')
+    if total >= 6:
+        first = lt.subList(adjacents, 1, 3)
+        last = lt.subList(adjacents, (total-2), 3)
+        for element in lt.iterator(first):
+            info = mp.get(analyzer['IATAcodes'], element)
+            printAirportData(me.getValue(info))
+        for element in lt.iterator(last):
+            info = mp.get(analyzer['IATAcodes'], element)
+            printAirportData(me.getValue(info))
+    else:
+        for element in lt.iterator(adjacents):
+            info = mp.get(analyzer['IATAcodes'], element)
+            printAirportData(me.getValue(info))
 
 
 """
@@ -146,7 +165,7 @@ while True:
     elif inputs == 7:
         airport = str(input('Closing the airport with IATA code: ')).upper()
         adjacents = controller.getClosedAirport(analyzer, airport)
-        print(adjacents)
+        printClosed(analyzer, adjacents, airport)
 
     else:
         sys.exit(0)

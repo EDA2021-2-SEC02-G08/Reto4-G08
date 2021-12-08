@@ -30,6 +30,7 @@ from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.ADT.graph import gr
+from DISClib.Algorithms.Sorting import mergesort as mg
 assert cf
 
 
@@ -43,7 +44,9 @@ def newAnalyzer():
     analyzer = {'directed': None,
                 'no_directed': None,
                 'cities': None,
-                'IATAcodes': None}
+                'IATAcodes': None,
+                'GraphRoutes': 0,
+                'DiGraphRoutes': 0}
 
     analyzer['directed'] = gr.newGraph(datastructure='ADJ_LIST',
                                        directed=True,
@@ -86,27 +89,32 @@ def addAirportToGraph(graph, airport):
         gr.insertVertex(graph, airport)
 
 
-def addConnectionToGraph(graph, origin, destination, distance):
+def addConnectionToGraph(graph, origin, destination, weight):
     """
     Adiciona un arco entre dos aeropuertos a un grafo.
     """
     edge = gr.getEdge(graph, origin, destination)
     if edge is None:
-        gr.addEdge(graph, origin, destination, distance)
+        gr.addEdge(graph, origin, destination, weight)
 
 
 def addConnection(analyzer, origin, destination, distance):
     """
     Adiciona las rutas a los grafos dirigido y no dirigido.
     """
+
+    # Adiciona las rutas al grafo dirigido
     digraph = analyzer['directed']
     addConnectionToGraph(digraph, origin, destination, distance)
-    come = gr.getEdge(digraph, origin, destination)
-    go = gr.getEdge(digraph, destination, origin)
-    comeNgo = (come is not None) and (go is not None)
-    if comeNgo:
+    analyzer['DiGraphRoutes'] += 1
+
+    # Adiciona las rutas al grafo no dirigido
+    go = gr.getEdge(digraph, origin, destination)
+    come = gr.getEdge(digraph, destination, origin)
+    if (go is not None) and (come is not None):
         graph = analyzer['no_directed']
         addConnectionToGraph(graph, origin, destination, distance)
+        analyzer['GraphRoutes'] += 1
 
 
 def addCity(analyzer, city):
@@ -142,6 +150,7 @@ def getClosedAirport(analyzer, airport):
     default = None
     if mp.contains(analyzer['IATAcodes'], airport):
         default = gr.adjacents(analyzer['directed'], airport)
+        mg.sort(default, cmpSort)
     return default
 
 # Funciones utilizadas para comparar elementos dentro de una lista
@@ -157,4 +166,5 @@ def compareIATA(code, airport):
         return -1
 
 
-# Funciones de ordenamiento
+def cmpSort(iata1, iata2):
+    return iata1[0] < iata2[0]
