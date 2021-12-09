@@ -190,8 +190,9 @@ while True:
         Departure = str(input('Ingrese la ciudad de partida: ')).lower()
         Arrival = str(input('Ingrese la ciudad de llegada: ')).lower()
         salida, llegada = ciudadesRepetidas(analyzer, Departure, Arrival)
-        print(salida)
-        print(llegada)
+        aero1, aero2 = controller.getNearestAirport(analyzer, salida, llegada)
+        print(aero1)
+        print(aero2)
 
     elif inputs == 6:
         pass
