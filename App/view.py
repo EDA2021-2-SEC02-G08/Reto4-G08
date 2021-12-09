@@ -25,6 +25,7 @@ import config as cf
 import sys
 import controller
 from DISClib.ADT import list as lt
+from DISClib.ADT import queue as qe
 from DISClib.ADT import map as mp
 from DISClib.ADT.graph import gr
 assert cf
@@ -223,8 +224,13 @@ while True:
             print(element)
 
     elif inputs == 6:
-        miles = int(input('Available travel miles: '))
-        mst = controller.reque4(analyzer, miles)
+        miles = float(input('Ingrese número de millas: '))
+        distMax, distKM, q = controller.getRouteWithMiles(analyzer, miles)
+        print('Número de aeropuertos posibles: ' + str(qe.size(q)))
+        print('Longitud máxima del viaje: ' + str(distMax) + ' (km).')
+        print('Millas de viajero disponibles: ' + str(distKM) + ' (km).')
+        print(q)
+
 
     elif inputs == 7:
         airport = str(input('Closing the airport with IATA code: ')).upper()
