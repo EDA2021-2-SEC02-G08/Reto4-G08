@@ -28,13 +28,13 @@
 import config as cf
 from DISClib.ADT import list as lt
 from DISClib.ADT import map as mp
+from DISClib.ADT import queue as q
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Graphs import scc
-from DISClib.Algorithms.Graphs import bfs
 from DISClib.Algorithms.Graphs import prim
 from DISClib.Algorithms.Graphs import dijsktra as djk
-from DISClib.ADT.graph import gr
+from DISClib.ADT import graph as gr
 from DISClib.Algorithms.Sorting import mergesort as mg
 from math import radians, cos, sin, asin, sqrt
 assert cf
