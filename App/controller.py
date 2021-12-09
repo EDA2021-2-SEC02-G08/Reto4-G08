@@ -118,3 +118,6 @@ def getClosedAirport(analyzer, airport):
 
 def requer3(analyzer, airport1, airport2):
     return model.requer3(analyzer, airport1, airport2)
+
+def getRouteWithMiles(analyzer, miles):
+    return model.getRouteWithMiles(analyzer, miles)

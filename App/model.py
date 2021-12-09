@@ -230,8 +230,11 @@ def hasPathBetween(analyzer, origin, destination):
 
 
 def getRouteWithMiles(analyzer, miles):
-    digraph = analyzer['dirigido']
-    search = prim.PrimMST(digraph)
+    graph = analyzer['no_dirigido']
+    search = prim.PrimMST(graph)
+    distKM = miles*0.621
+    distanciaMax = prim.weightMST(graph, search)
+    return distanciaMax, distKM, search['mst']
 
 
 def getNearestAirport(analyzer, salida, llegada):
