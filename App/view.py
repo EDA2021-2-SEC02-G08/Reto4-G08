@@ -64,9 +64,26 @@ Funciones de impresión
 
 
 def printAirportData(airport):
-    print('Name:{}, City: {}, Country: {}, Latitude: {}, Longitude: {}'.format(
+    print('Nombre:{}, Ciudad: {}, País: {}, Latitud: {}, Longitud: {}'.format(
           airport['Name'], airport['City'], airport['Country'],
           airport['Latitude'], airport['Longitude']))
+
+
+def printAirportDataWithConnections(airport):
+    print('Nombre: ' + airport['Name'] + ', Ciudad: ' + airport['City'] + 
+          'País: ' + airport['Country'] + ', Latitud: ' + airport['Latitude']
+          + ', Longitud: ' + airport['Longitude'] + ', Conexiones: ' +
+          str(airport['connections']) + ', Llegadas: ' + 
+          str(airport['inbound']) + ', Salidas: ' + str(airport['outbound'])
+         )
+
+
+def printAirportDataWithIATA(airport):
+    print('IATA: ' + airport['IATA'] + ', Nombre: ' + airport['Name']
+          + ', Ciudad: ' + airport['City'] + 'País: ' + airport['Country']
+          + ', Latitud: ' + airport['Latitude'] + ', Longitud: '
+          + airport['Longitude']
+         )
 
 
 def printCityData(city):
@@ -181,10 +198,22 @@ while True:
         printCity(analyzer)
 
     elif inputs == 3:
-        pass
+        hubs = controller.getHubs(analyzer)
+        print('Los 5 aeropuertos más conectados son:')
+        for hub in lt.iterator(hubs):
+            printAirportDataWithConnections(hub)
+        
 
     elif inputs == 4:
-        pass
+        nClusters = controller.getClusters(analyzer)
+        print('Hay ' + str(nClusters) + ' en la red.')
+        departure = str(input('Ingrese código IATA del aeropuerto de partida: ')).upper()
+        printAirportDataWithIATA(controller.getAirportDataFromIATA(departure))
+        arrival = str(input('Ingrese código IATA del aeropuerto de llegada: ')).upper()
+        printAirportDataWithIATA(controller.getAirportDataFromIATA(arrival))
+        same = controller.hasPathBetween(analyzer, departure, arrival)
+        print('¿Estos aeropuertos pertenecen al mismo clúster? ' + str(same))
+
 
     elif inputs == 5:
         Departure = str(input('Ingrese la ciudad de partida: ')).lower()
