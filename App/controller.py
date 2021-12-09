@@ -84,6 +84,10 @@ def getSCCs(analyzer):
 # Funciones de consulta sobre el catálogo
 
 
+def getNearestAirport(analyzer, salida, llegada):
+    return model.getNearestAirport(analyzer, salida, llegada)
+
+
 def getLoadedDiGraph(analyzer):
     return model.getLoadedDiGraph(analyzer)
 

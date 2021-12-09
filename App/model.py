@@ -191,7 +191,21 @@ def getRouteWithMiles(analyzer, miles):
     search = prim.PrimMST(digraph)
 
 
+def getNearestAirport(analyzer, salida, llegada):
+    airports = mp.valueSet(analyzer['IATAcodes'])
+    list1 = lt.newList(datastructure='ARRAY_LIST')
+    list2 = lt.newList(datastructure='ARRAY_LIST')
+    for element in lt.iterator(airports):
+        lat2 = float(element['Latitude'])
+        lng2 = float(element['Longitude'])
+        distance1 = haversine(float(salida['lng']), float(salida['lat']), lng2, lat2)
+        distance2 = haversine(float(llegada['lng']), float(llegada['lat']), lng2, lat2)
+        lt.addLast(list1, [element, distance1])
+        mg.sort(list1, cmpdistance)
+        lt.addLast(list2, [element, distance2])
+        mg.sort(list2, cmpdistance)
 
+    return lt.firstElement(list1), lt.firstElement(list2)
 
 
 def getClosedAirport(analyzer, airport):
@@ -254,5 +268,9 @@ def cmpConnections(analyzer, airport1, airport2):
         return True
     else:
         return False
+
+
+def cmpdistance(distance1, distance2):
+    return distance1[1] < distance2[1]
 
 # Funciones de ordenamiento
