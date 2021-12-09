@@ -185,17 +185,17 @@ def getHubs(analyzer):
         value = me.getValue(pair)
         if lt.size(hubs) < 5:
             map = {'IATA': key, 'connections': value['connections'],
-                'outbound': value['outbound'], 'inbound': value['inbound']}
+                   'outbound': value['outbound'], 'inbound': value['inbound']}
             lt.addLast(hubs, map)
             ins.sort(hubs, cmpConnections)
         else:
             last = lt.lastElement(hubs)
             pair = mp.get(connections, last['IATA'])
             N_last = me.getValue(pair)['connections']
-            if value['connections']>=N_last:
+            if value['connections'] >= N_last:
                 lt.removeLast(hubs)
                 map = {'IATA': key, 'connections': value['connections'],
-                'outbound': value['outbound'], 'inbound': value['inbound']}
+                       'outbound': value['outbound'], 'inbound': value['inbound']}
                 lt.addLast(hubs, map)
                 ins.sort(hubs, cmpConnections)
 

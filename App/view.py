@@ -70,20 +70,18 @@ def printAirportData(airport):
 
 
 def printAirportDataWithConnections(airport):
-    print('Nombre: ' + airport['Name'] + ', Ciudad: ' + airport['City'] + 
+    print('Nombre: ' + airport['Name'] + ', Ciudad: ' + airport['City'] +
           ', País: ' + airport['Country'] + ', Latitud: ' + airport['Latitude']
           + ', Longitud: ' + airport['Longitude'] + ', Conexiones: ' +
-          str(airport['connections']) + ', Llegadas: ' + 
-          str(airport['inbound']) + ', Salidas: ' + str(airport['outbound'])
-         )
+          str(airport['connections']) + ', Llegadas: ' +
+          str(airport['inbound']) + ', Salidas: ' + str(airport['outbound']))
 
 
 def printAirportDataWithIATA(airport):
     print('IATA: ' + airport['IATA'] + ', Nombre: ' + airport['Name']
           + ', Ciudad: ' + airport['City'] + 'País: ' + airport['Country']
           + ', Latitud: ' + airport['Latitude'] + ', Longitud: '
-          + airport['Longitude']
-         )
+          + airport['Longitude'])
 
 
 def printCityData(city):
@@ -202,7 +200,6 @@ while True:
         print('Los 5 aeropuertos más conectados son:')
         for hub in lt.iterator(hubs):
             printAirportDataWithConnections(hub)
-        
 
     elif inputs == 4:
         nClusters = controller.getClusters(analyzer)
@@ -213,7 +210,6 @@ while True:
         printAirportDataWithIATA(controller.getAirportDataFromIATA(analyzer, arrival))
         same = controller.hasPathBetween(analyzer, departure, arrival)
         print('¿Estos aeropuertos pertenecen al mismo clúster? ' + str(same))
-
 
     elif inputs == 5:
         Departure = str(input('Ingrese la ciudad de partida: ')).lower()
