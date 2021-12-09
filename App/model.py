@@ -191,9 +191,6 @@ def getRouteWithMiles(analyzer, miles):
     search = prim.PrimMST(digraph)
 
 
-
-
-
 def getClosedAirport(analyzer, airport):
     default = None
     if mp.contains(analyzer['IATAcodes'], airport):
