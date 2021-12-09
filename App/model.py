@@ -50,7 +50,6 @@ def newAnalyzer():
     analyzer = {'directed': None,
                 'no_directed': None,
                 'cities': None,
-                'cities_map': None, 
                 'IATAcodes': None,
                 'components': None}
 
@@ -68,9 +67,6 @@ def newAnalyzer():
 
     analyzer['IATAcodes'] = mp.newMap(numelements=10000,
                                       maptype='PROBING')
-  
-    analyzer['cities_map'] = mp.newMap(numelements=10000,
-                                       maptype='PROBING')
 
     return analyzer
 
@@ -123,16 +119,8 @@ def addConnection(analyzer, origin, destination, distance):
         addConnectionToGraph(graph, origin, destination, distance)
 
 
-lista = lt.newList(datastructure='ARRAY_LIST')
-
-
 def addCity(analyzer, city):
-    name = city['city']
     lt.addLast(analyzer['cities'], city)
-    if not mp.contains(analyzer['cities_map'], name):
-        mp.put(analyzer['cities_map'], name, lista)
-    array = mp.get(analyzer['cities_map'], name)['value']
-    lt.addLast(array, city)
 
 
 def getSCCs(analyzer):
@@ -167,7 +155,7 @@ def getLoadedGraph(analyzer):
 
 def getHubs(analyzer):
     """
-    Retorna los 5 aeropuertos más interconectados y el total de aeropuertos 
+    Retorna los 5 aeropuertos más interconectados y el total de aeropuertos
     en la red.
     """
     digraph = analyzer['directed']
