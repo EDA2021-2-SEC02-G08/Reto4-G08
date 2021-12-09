@@ -181,7 +181,7 @@ while True:
         printCity(analyzer)
 
     elif inputs == 3:
-        print(analyzer['components'])
+        print(lt.firstElement(mp.valueSet(analyzer['IATAcodes'])))
 
     elif inputs == 4:
         pass
