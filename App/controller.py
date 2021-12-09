@@ -96,6 +96,14 @@ def getClusters(analyzer):
     return model.getClusters(analyzer)
 
 
+def getAirportDataFromIATA(analyzer, IATA):
+    return model.getAirportDataFromIATA(analyzer, IATA)
+
+
+def getHubs(analyzer):
+    return model.getHubs(analyzer)
+
+
 def hasPathBetween(analyzer, origin, destination):
     return model.hasPathBetween(analyzer, origin, destination)
 

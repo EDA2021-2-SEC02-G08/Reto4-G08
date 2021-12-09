@@ -50,7 +50,9 @@ def newAnalyzer():
                 'no_directed': None,
                 'cities': None,
                 'IATAcodes': None,
-                'components': None}
+                'components': None,
+                'connections': None,
+                'hubs': None}
 
     analyzer['directed'] = gr.newGraph(datastructure='ADJ_LIST',
                                        directed=True,
@@ -67,6 +69,11 @@ def newAnalyzer():
     analyzer['IATAcodes'] = mp.newMap(numelements=10000,
                                       maptype='PROBING')
 
+    analyzer['connections'] = mp.newMap(numelements=10000,
+                                      maptype='PROBING')
+
+    analyzer['hubs'] = lt.newList('ARRAY_LIST')
+
     return analyzer
 
 
@@ -81,7 +88,9 @@ def addAirport(analyzer, airport):
     vertex = airport['IATA']
     addAirportToGraph(analyzer['directed'], vertex)
     addAirportToGraph(analyzer['no_directed'], vertex)
+    data = {'connections': 0, 'inbound': 0, 'outbound': 0}
     mp.put(analyzer['IATAcodes'], vertex, airport)
+    mp.put(analyzer['connections'], vertex, data)
 
 
 def addAirportToGraph(graph, airport):
@@ -109,6 +118,34 @@ def addConnection(analyzer, origin, destination, distance):
     # Adiciona las rutas al grafo dirigido
     digraph = analyzer['directed']
     addConnectionToGraph(digraph, origin, destination, distance)
+
+    # Cuenta las conexiones de los aeropuertos
+    connections = analyzer['connections']
+    pair1 = mp.get(connections, origin)
+    pair2 = mp.get(connections, destination)
+    value1 = me.getValue(pair1)
+    value2 = me.getValue(pair2)
+
+    # Actualizar el mapa
+    value1['connections'] += 1
+    value2['connections'] += 1
+    value1['outbound'] += 1
+    value2['inbound'] += 1
+
+    #Actualizar hubs
+    hubs = analyzer['hubs']
+    if lt.size(hubs) < 5:
+        lt.addLast(origin)
+        ins.sort(hubs, cmpConnections)
+    else:
+        last = lt.lastElement(hubs)
+        pair = mp.get(connections, last)
+        N_last = me.getValue(pair)['connections']
+        if value1['connections']>N_last:
+            lt.removeLast(hubs)
+            lt.addLast(hubs, origin)
+            ins.sort(hubs, cmpConnections)
+
 
     # Adiciona las rutas al grafo no dirigido
     go = gr.getEdge(digraph, origin, destination)
@@ -157,23 +194,29 @@ def getHubs(analyzer):
     Retorna los 5 aeropuertos más interconectados y el total de aeropuertos 
     en la red.
     """
-    digraph = analyzer['directed']
-    IATAs = analyzer['IATAcodes']
-    airports = gr.vertices(digraph)
-    mostCnctd = lt.subList(mp.valueSet(IATAs), 1, 5)
-    mostCnctd = ins.sort(mostCnctd, cmpConnections)
-    for airport in lt.iterator(airports):
-        last = lt.lastElement(mostCnctd)
-        Nlast = getAirportConnections(analyzer, last['IATA'])
-        N_comp = getAirportConnections(analyzer, airport)
-        if N_comp > Nlast:
-            pair = mp.get(IATAs, airport)
-            info = me.getValue(pair)
-            lt.removeLast(mostCnctd)
-            lt.addLast(mostCnctd, info)
-            mostCnctd = ins.sort(mostCnctd, cmpConnections)
+    connections = analyzer['connections']
+    hubs = analyzer['hubs']
+    mostCncted = lt.newList('SINGLE_LINKED')
+    for hub in lt.iterator(hubs):
+        info = getAirportDataFromIATA(analyzer, hub)
+        pair = mp.get(connections, hub)
+        data = me.getValue(pair)
+        info['connections'] = data['connections']
+        info['inbound'] = data['inbound']
+        info['outbound'] = data['outbound']
+        lt.addLast(mostCncted, info)
 
-    return mostCnctd
+    return mostCncted
+
+
+def getAirportDataFromIATA(analyzer, IATA):
+    airports = analyzer['IATAcodes']
+    isPresent = mp.contains(airports, IATA)
+    if isPresent:
+        pair = mp.get(airports, IATA)
+        return me.getValue(pair)
+    else:
+        return None
 
 
 def getClusters(analyzer):
@@ -198,13 +241,6 @@ def getClosedAirport(analyzer, airport):
     return default
 
 
-# Funciones auxiliares
-
-def getAirportConnections(analyzer, airport):
-    digraph = analyzer['dirigido']
-    N = gr.indegree(digraph, airport) + gr.outdegree(digraph, airport)
-    return N
-
 # Funciones utilizadas para comparar elementos dentro de una lista
 
 
@@ -223,10 +259,12 @@ def cmpSort(iata1, iata2):
 
 
 def cmpConnections(analyzer, airport1, airport2):
-    digraph = analyzer['dirigido']
-    adj1 = getAirportConnections(analyzer, airport1['IATA'])
-    adj2 = getAirportConnections(analyzer, airport2['IATA'])
-    if adj1 > adj2:
+    connections = analyzer['connections']
+    pair1 = mp.get(connections, airport1)
+    pair2 = mp.get(connections, airport2)
+    n1 = me.getValue(pair1)['connections']
+    n2 = me.getValue(pair2)['connections']
+    if n1 > n2:
         return True
     else:
         return False
