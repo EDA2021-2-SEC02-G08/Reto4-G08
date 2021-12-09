@@ -73,8 +73,6 @@ def newAnalyzer():
     analyzer['connections'] = mp.newMap(numelements=10000,
                                       maptype='PROBING')
 
-    analyzer['hubs'] = lt.newList('ARRAY_LIST')
-
     return analyzer
 
 
@@ -133,21 +131,6 @@ def addConnection(analyzer, origin, destination, distance):
     value1['outbound'] += 1
     value2['inbound'] += 1
 
-    #Actualizar hubs
-    hubs = analyzer['hubs']
-    if lt.size(hubs) < 5:
-        lt.addLast(origin)
-        ins.sort(hubs, cmpConnections)
-    else:
-        last = lt.lastElement(hubs)
-        pair = mp.get(connections, last)
-        N_last = me.getValue(pair)['connections']
-        if value1['connections']>N_last:
-            lt.removeLast(hubs)
-            lt.addLast(hubs, origin)
-            ins.sort(hubs, cmpConnections)
-
-
     # Adiciona las rutas al grafo no dirigido
     go = gr.getEdge(digraph, origin, destination)
     come = gr.getEdge(digraph, destination, origin)
@@ -196,15 +179,32 @@ def getHubs(analyzer):
     en la red.
     """
     connections = analyzer['connections']
-    hubs = analyzer['hubs']
+    hubs = lt.newList('ARRAY_LIST')
+    for key in lt.iterator(mp.keySet(connections)):
+        pair = mp.get(connections, key)
+        value = me.getValue(pair)
+        if lt.size(hubs) < 5:
+            map = {'IATA': key, 'connections': value['connections'],
+                'outbound': value['outbound'], 'inbound': value['inbound']}
+            lt.addLast(hubs, map)
+            ins.sort(hubs, cmpConnections)
+        else:
+            last = lt.lastElement(hubs)
+            pair = mp.get(connections, last['IATA'])
+            N_last = me.getValue(pair)['connections']
+            if value['connections']>=N_last:
+                lt.removeLast(hubs)
+                map = {'IATA': key, 'connections': value['connections'],
+                'outbound': value['outbound'], 'inbound': value['inbound']}
+                lt.addLast(hubs, map)
+                ins.sort(hubs, cmpConnections)
+
     mostCncted = lt.newList('SINGLE_LINKED')
     for hub in lt.iterator(hubs):
-        info = getAirportDataFromIATA(analyzer, hub)
-        pair = mp.get(connections, hub)
-        data = me.getValue(pair)
-        info['connections'] = data['connections']
-        info['inbound'] = data['inbound']
-        info['outbound'] = data['outbound']
+        info = getAirportDataFromIATA(analyzer, hub['IATA'])
+        info['connections'] = hub['connections']
+        info['inbound'] = hub['inbound']
+        info['outbound'] = hub['outbound']
         lt.addLast(mostCncted, info)
 
     return mostCncted
@@ -303,12 +303,9 @@ def cmpSort(iata1, iata2):
     return iata1[0] < iata2[0]
 
 
-def cmpConnections(analyzer, airport1, airport2):
-    connections = analyzer['connections']
-    pair1 = mp.get(connections, airport1)
-    pair2 = mp.get(connections, airport2)
-    n1 = me.getValue(pair1)['connections']
-    n2 = me.getValue(pair2)['connections']
+def cmpConnections(airport1, airport2):
+    n1 = airport1['connections']
+    n2 = airport2['connections']
     if n1 > n2:
         return True
     else:
