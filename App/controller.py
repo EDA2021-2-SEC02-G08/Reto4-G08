@@ -106,3 +106,7 @@ def hasPathBetween(analyzer, origin, destination):
 
 def getClosedAirport(analyzer, airport):
     return model.getClosedAirport(analyzer, airport)
+
+
+def requer3(analyzer, airport1, airport2):
+    return model.requer3(analyzer, airport1, airport2)
