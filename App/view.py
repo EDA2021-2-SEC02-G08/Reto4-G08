@@ -227,7 +227,8 @@ while True:
             print(element)
 
     elif inputs == 6:
-        pass
+        miles = int(input('Available travel miles: '))
+        controller.reque4(analyzer, miles)
 
     elif inputs == 7:
         airport = str(input('Closing the airport with IATA code: ')).upper()

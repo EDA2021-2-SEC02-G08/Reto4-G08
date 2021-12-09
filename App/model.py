@@ -71,7 +71,7 @@ def newAnalyzer():
                                       maptype='PROBING')
 
     analyzer['connections'] = mp.newMap(numelements=10000,
-                                      maptype='PROBING')
+                                        maptype='PROBING')
 
     analyzer['hubs'] = lt.newList('ARRAY_LIST')
 
@@ -133,20 +133,19 @@ def addConnection(analyzer, origin, destination, distance):
     value1['outbound'] += 1
     value2['inbound'] += 1
 
-    #Actualizar hubs
+    # Actualizar hubs
     hubs = analyzer['hubs']
     if lt.size(hubs) < 5:
-        lt.addLast(origin)
+        lt.addLast(hubs, origin)
         ins.sort(hubs, cmpConnections)
     else:
         last = lt.lastElement(hubs)
         pair = mp.get(connections, last)
         N_last = me.getValue(pair)['connections']
-        if value1['connections']>N_last:
+        if value1['connections'] > N_last:
             lt.removeLast(hubs)
             lt.addLast(hubs, origin)
             ins.sort(hubs, cmpConnections)
-
 
     # Adiciona las rutas al grafo no dirigido
     go = gr.getEdge(digraph, origin, destination)
@@ -230,8 +229,10 @@ def hasPathBetween(analyzer, origin, destination):
 
 
 def getRouteWithMiles(analyzer, miles):
-    digraph = analyzer['dirigido']
+    digraph = analyzer['no_directed']
     search = prim.PrimMST(digraph)
+
+    return search
 
 
 def getNearestAirport(analyzer, salida, llegada):
@@ -281,7 +282,7 @@ def haversine(lon1, lat1, lon2, lat2):
     dlat = lat2 - lat1
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
     c = 2 * asin(sqrt(a))
-    r = 6371  # Radius of earth in kilometers. Use 3956 for miles. Determines return value units.
+    r = 6371  # Radius of earth in kilometers. Use 3956 for miles.
 
     return c * r
 
