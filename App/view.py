@@ -224,7 +224,7 @@ while True:
             print(element)
 
     elif inputs == 6:
-        miles = int(input('Ingrese número de millas: '))
+        miles = float(input('Ingrese número de millas: '))
         distMax, distKM, q = controller.getRouteWithMiles(analyzer, miles)
         print('Número de aeropuertos posibles: ' + str(qe.size(q)))
         print('Longitud máxima del viaje: ' + str(distMax) + ' (km).')

@@ -230,7 +230,7 @@ def hasPathBetween(analyzer, origin, destination):
 
 
 def getRouteWithMiles(analyzer, miles):
-    graph = analyzer['no_dirigido']
+    graph = analyzer['no_directed']
     search = prim.PrimMST(graph)
     distKM = miles*0.621
     distanciaMax = prim.weightMST(graph, search)
