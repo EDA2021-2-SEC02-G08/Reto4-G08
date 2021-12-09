@@ -231,7 +231,6 @@ while True:
         print('Millas de viajero disponibles: ' + str(distKM) + ' (km).')
         print(q)
 
-
     elif inputs == 7:
         airport = str(input('Closing the airport with IATA code: ')).upper()
         adjacents = controller.getClosedAirport(analyzer, airport)
