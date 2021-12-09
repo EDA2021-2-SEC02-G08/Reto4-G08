@@ -67,7 +67,7 @@ def loadRoutes(analyzer, routes_file):
 
     for route in input_file:
         model.addConnection(analyzer, route['Departure'],
-                            route['Destination'], route['distance_km'])
+                            route['Destination'], float(route['distance_km']))
 
 
 def loadCities(analyzer, cities_file):
