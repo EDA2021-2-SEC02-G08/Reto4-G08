@@ -71,7 +71,7 @@ def printAirportData(airport):
 
 def printAirportDataWithConnections(airport):
     print('Nombre: ' + airport['Name'] + ', Ciudad: ' + airport['City'] + 
-          'País: ' + airport['Country'] + ', Latitud: ' + airport['Latitude']
+          ', País: ' + airport['Country'] + ', Latitud: ' + airport['Latitude']
           + ', Longitud: ' + airport['Longitude'] + ', Conexiones: ' +
           str(airport['connections']) + ', Llegadas: ' + 
           str(airport['inbound']) + ', Salidas: ' + str(airport['outbound'])
@@ -208,9 +208,9 @@ while True:
         nClusters = controller.getClusters(analyzer)
         print('Hay ' + str(nClusters) + ' en la red.')
         departure = str(input('Ingrese código IATA del aeropuerto de partida: ')).upper()
-        printAirportDataWithIATA(controller.getAirportDataFromIATA(departure))
+        printAirportDataWithIATA(controller.getAirportDataFromIATA(analyzer, departure))
         arrival = str(input('Ingrese código IATA del aeropuerto de llegada: ')).upper()
-        printAirportDataWithIATA(controller.getAirportDataFromIATA(arrival))
+        printAirportDataWithIATA(controller.getAirportDataFromIATA(analyzer, arrival))
         same = controller.hasPathBetween(analyzer, departure, arrival)
         print('¿Estos aeropuertos pertenecen al mismo clúster? ' + str(same))
 
