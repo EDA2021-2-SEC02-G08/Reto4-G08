@@ -31,7 +31,7 @@ from DISClib.ADT import map as mp
 from DISClib.DataStructures import mapentry as me
 from DISClib.Algorithms.Sorting import insertionsort as ins
 from DISClib.Algorithms.Graphs import scc
-from DISClib.Algorithms.Graphs import dfs
+from DISClib.Algorithms.Graphs import bfs
 from DISClib.Algorithms.Graphs import prim
 from DISClib.Algorithms.Graphs import dijsktra as djk
 from DISClib.ADT.graph import gr
@@ -71,7 +71,7 @@ def newAnalyzer():
                                       maptype='PROBING')
 
     analyzer['connections'] = mp.newMap(numelements=10000,
-                                      maptype='PROBING')
+                                        maptype='PROBING')
 
     return analyzer
 
@@ -185,17 +185,17 @@ def getHubs(analyzer):
         value = me.getValue(pair)
         if lt.size(hubs) < 5:
             map = {'IATA': key, 'connections': value['connections'],
-                'outbound': value['outbound'], 'inbound': value['inbound']}
+                   'outbound': value['outbound'], 'inbound': value['inbound']}
             lt.addLast(hubs, map)
             ins.sort(hubs, cmpConnections)
         else:
             last = lt.lastElement(hubs)
             pair = mp.get(connections, last['IATA'])
             N_last = me.getValue(pair)['connections']
-            if value['connections']>=N_last:
+            if value['connections'] >= N_last:
                 lt.removeLast(hubs)
                 map = {'IATA': key, 'connections': value['connections'],
-                'outbound': value['outbound'], 'inbound': value['inbound']}
+                       'outbound': value['outbound'], 'inbound': value['inbound']}
                 lt.addLast(hubs, map)
                 ins.sort(hubs, cmpConnections)
 
@@ -235,6 +235,8 @@ def getRouteWithMiles(analyzer, miles):
     distKM = miles*0.621
     distanciaMax = prim.weightMST(graph, search)
     return distanciaMax, distKM, search['mst']
+
+    return search
 
 
 def getNearestAirport(analyzer, salida, llegada):
@@ -284,7 +286,7 @@ def haversine(lon1, lat1, lon2, lat2):
     dlat = lat2 - lat1
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
     c = 2 * asin(sqrt(a))
-    r = 6371  # Radius of earth in kilometers. Use 3956 for miles. Determines return value units.
+    r = 6371  # Radius of earth in kilometers. Use 3956 for miles.
 
     return c * r
 
