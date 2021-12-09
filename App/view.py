@@ -53,8 +53,8 @@ def printMenu():
 catalog = None
 
 
-airports_file = 'airports-utf8-small.csv'
-routes_file = 'routes-utf8-small.csv'
+airports_file = 'airports-utf8-large.csv'
+routes_file = 'routes-utf8-large.csv'
 cities_file = 'worldcities-utf8.csv'
 
 
@@ -225,7 +225,6 @@ while True:
     elif inputs == 6:
         miles = int(input('Available travel miles: '))
         mst = controller.reque4(analyzer, miles)
-        print(mst)
 
     elif inputs == 7:
         airport = str(input('Closing the airport with IATA code: ')).upper()
